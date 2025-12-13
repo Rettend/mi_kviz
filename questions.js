@@ -623,7 +623,7 @@ const questions = [
         "id": 40,
         "category": "4. Visszalépéses keresés",
         "question": "Mi a visszalépéses keresés általános vezérlési stratégiája",
-        "type": "multi",
+        "type": "single",
         "options": [
             "A továbblépést meghatározó sorrendi és a vágó szabályok",
             "A visszalépés szabálya mindig elsőbbséget élvez a többi keresési szabállyal szemben",
@@ -1679,8 +1679,8 @@ const questions = [
             "Minden rezolúciós lépésben az egyik szülőklóz egyetlen literálból jön létre"
         ],
         "correct": [
-            1,
-            2
+            0,
+            3
         ]
     },
     {
