@@ -1287,18 +1287,12 @@ const questions = [
     "id": 84,
     "category": "7. Kétszemélyes játékok",
     "question": "Mely fogalmak kapcsolhatók egymáshoz a részleges játékfa-kiértékeléseknél",
-    "type": "multi",
-    "options": [
-      "negamax algoritmus: könnyebb implementáció",
-      "(n,m) átlagoló kiértékelés: kiértékelő függvény tévedései",
-      "váltakozó mélységű kiértékelés: megbízhatóbb kiértékelés",
-      "alfa-béta algoritmus: hatékonyabb módszer"
-    ],
-    "correct": [
-      0,
-      1,
-      2,
-      3
+    "type": "pair",
+    "pairs": [
+      { "left": "negamax algoritmus", "right": "könnyebb implementáció" },
+      { "left": "(n,m) átlagoló kiértékelés", "right": "kiértékelő függvény tévedései" },
+      { "left": "váltakozó mélységű kiértékelés", "right": "megbízhatóbb kiértékelés" },
+      { "left": "alfa-béta algoritmus", "right": "hatékonyabb módszer" }
     ]
   },
   {
@@ -2476,3 +2470,4 @@ const questions = [
 ];
 
 window.questions = questions;
+
