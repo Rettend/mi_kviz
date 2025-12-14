@@ -1374,7 +1374,7 @@ const questions = [
         "id": 88,
         "category": "8. Evolúciós algoritmusok",
         "question": "Hogyan szokták az egyedeket kódolni?",
-        "type": "multi",
+        "type": "single",
         "options": [
             "Úgy, hogy a dekódolás gyors legyen, mert a fittnesz függvényt az egyedre lehet kiszámolni.",
             "Úgy, hogy a kód darabjai az egyed egy-egy tulajdonságát mutassa.",
