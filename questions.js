@@ -1607,7 +1607,7 @@ const questions = [
         "id": 103,
         "category": "9. Automatikus következtetés",
         "question": "Hogyan kell a rezolúciót válaszadásra felhasználni",
-        "type": "multi",
+        "type": "single",
         "options": [
             "A rezolúció csak igen/nem jellegű választ képes adni",
             "A kérdésre adható választ egy külön predikátummal jelenítjük meg a célállításban",
@@ -1626,7 +1626,7 @@ const questions = [
         "options": [
             "Ha elakad (nem tud újabb klózt előállítani), akkor a kiinduló klózhalmaz kielégíthető",
             "Ha üres klózzal terminál, akkor a kiinduló klózhalmaz kielégíthetetlen",
-            "Kicsit a futási ideje",
+            "Kicsi a futási ideje",
             "Mindig elő tudja állítani az üres klózt"
         ],
         "correct": [
@@ -1686,7 +1686,7 @@ const questions = [
         "id": 108,
         "category": "9. Automatikus következtetés",
         "question": "Melyik az alábbiak közül a rezolúció modellfüggő sorrendi stratégiái?",
-        "type": "single",
+        "type": "multi",
         "options": [
             "Minden rezolúciós lépésben az egyik szülőklóz az utoljára előállított klóz legyen",
             "Soroljuk be szintekre  a rezolúciós gráf klózait. Nulladik szinten a kiinduló klózok, az i+1-dik szinten azok, amelyek egyik szülője az i-dik szinten van, a másik szülő az első i szint valamelyikén. Állítsuk elő szintenként a klózokat.",
@@ -1694,8 +1694,8 @@ const questions = [
             "Minden rezolúciós lépésben az egyik szülőklóz egyetlen literálból jön létre"
         ],
         "correct": [
-            0,
-            3
+            1,
+            2
         ]
     },
     {
