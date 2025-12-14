@@ -243,6 +243,61 @@
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     }
 
+    /* Keyboard shortcut hints */
+    .kbd-hint {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      font-family: monospace;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+      opacity: 0.8;
+    }
+
+    .btn-outline-primary .kbd-hint {
+      background-color: rgba(13, 110, 253, 0.15);
+    }
+
+    .btn-skip .kbd-hint {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    body.dark-mode .kbd-hint {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .option-kbd {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      text-align: center;
+      font-size: 0.75rem;
+      font-family: monospace;
+      font-weight: bold;
+      background-color: var(--option-hover);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      flex-shrink: 0;
+      position: absolute;
+      left: -32px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .option-item,
+    .pair-item {
+      position: relative;
+      margin-left: 36px;
+    }
+
+    .pair-item .option-kbd {
+      left: -32px;
+    }
+
     /* Ugrás gomb stílus */
     .btn-skip {
       background-color: #6c757d;
@@ -478,7 +533,7 @@
           <span id="override-indicator" class="override-badge" style="display:none;">JAVÍTÓ MÓD</span>
           <div class="text-muted small fw-bold mt-1">Kérdés <span id="current-count" contenteditable="true"
               class="editable-count" title="Kattints és írd be a kérdés számát!">1</span> / <span
-              id="total-count">0</span></div>
+              id="total-count">0</span> <span class="kbd-hint" style="opacity:0.5;font-size:0.6rem;">G</span></div>
         </div>
         <div class="text-end">
           <div class="fs-4 fw-bold text-success" id="score-display">0 pont</div>
@@ -495,17 +550,18 @@
 
         <div class="d-grid gap-2 mt-4">
           <!-- Normál mód gombok -->
-          <button id="check-btn" class="btn btn-primary btn-lg shadow-sm" onclick="checkAnswer()">Ellenőrzés</button>
+          <button id="check-btn" class="btn btn-primary btn-lg shadow-sm" onclick="checkAnswer()">Ellenőrzés <span
+              class="kbd-hint">Space</span></button>
           <button id="next-btn" class="btn btn-outline-primary btn-lg shadow-sm" style="display: none;"
-            onclick="nextQuestion()">Következő kérdés</button>
+            onclick="nextQuestion()">Következő kérdés <span class="kbd-hint">Space</span></button>
 
           <!-- ÚJ UGRÁS GOMB (csak lineáris módban látszik majd) -->
           <button id="skip-btn" class="btn btn-skip btn-lg shadow-sm" style="display: none;" onclick="skipQuestions()">⏩
-            +10 Ugrás</button>
+            +10 Ugrás <span class="kbd-hint">S</span></button>
 
           <!-- Javító mód gomb -->
           <button id="save-next-btn" class="btn btn-warning btn-lg shadow-sm fw-bold" style="display: none;"
-            onclick="saveAndNext()">Mentés és Következő ➡</button>
+            onclick="saveAndNext()">Mentés és Következő ➡ <span class="kbd-hint">Enter</span></button>
         </div>
       </div>
     </div>
@@ -620,7 +676,104 @@
         sel.removeAllRanges();
         sel.addRange(range);
       });
+
+      // Global keyboard shortcuts
+      document.addEventListener('keydown', handleKeyboardShortcuts);
     });
+
+    function handleKeyboardShortcuts(e) {
+      // Ignore if typing in an input or contenteditable
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+        return;
+      }
+
+      // Ignore if quiz not active
+      const quizContainer = document.getElementById('quiz-container');
+      if (!quizContainer || quizContainer.style.display === 'none') {
+        return;
+      }
+
+      const q = quizQuestions[currentIdx];
+
+      // Space - Check answer or Next question
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (isOverrideMode) {
+          saveAndNext();
+        } else if (isChecked) {
+          nextQuestion();
+        } else {
+          checkAnswer();
+        }
+        return;
+      }
+
+      // S - Skip 10 questions (only in linear mode before checking)
+      if (e.key.toLowerCase() === 's' && isLinearMode && !isChecked && !isOverrideMode) {
+        e.preventDefault();
+        skipQuestions();
+        return;
+      }
+
+      // G - Go to question (focus counter)
+      if (e.key.toLowerCase() === 'g') {
+        e.preventDefault();
+        document.getElementById('current-count').focus();
+        return;
+      }
+
+      // 1-4 - Select options
+      if (['1', '2', '3', '4'].includes(e.key) && !isChecked) {
+        e.preventDefault();
+        const optionIdx = parseInt(e.key) - 1;
+
+        if (q.type === 'pair') {
+          handlePairKeyboard(optionIdx);
+        } else {
+          handleOptionKeyboard(optionIdx);
+        }
+        return;
+      }
+    }
+
+    function handleOptionKeyboard(optionIdx) {
+      const options = document.querySelectorAll('.option-item');
+      if (optionIdx >= options.length) return;
+
+      const option = options[optionIdx];
+      const input = option.querySelector('input');
+      if (!input) return;
+
+      input.checked = !input.checked;
+
+      // For radio, uncheck others
+      if (input.type === 'radio' && input.checked) {
+        document.querySelectorAll('input[name="option"]').forEach(i => {
+          if (i !== input) i.checked = false;
+        });
+      }
+
+      updateSelectionStyles(isOverrideMode);
+    }
+
+    function handlePairKeyboard(idx) {
+      const q = quizQuestions[currentIdx];
+      if (idx >= q.pairs.length) return;
+
+      // If no left selected, select left side
+      if (pairState.selectedLeft === null) {
+        const leftItems = document.querySelectorAll('.pair-item[data-side="left"]');
+        if (leftItems[idx]) {
+          handlePairClick('left', idx, leftItems[idx]);
+        }
+      } else {
+        // Left is selected, select right side
+        const rightItems = document.querySelectorAll('.pair-item[data-side="right"]');
+        if (rightItems[idx]) {
+          handlePairClick('right', parseInt(rightItems[idx].dataset.idx), rightItems[idx]);
+        }
+      }
+    }
 
     window.onload = function () {
       // Téma betöltése
@@ -769,6 +922,14 @@
         label.htmlFor = `opt-${visualIdx}`;
         label.innerText = optObj.text;
 
+        // Add keyboard hint (1-4)
+        if (visualIdx < 4) {
+          const kbd = document.createElement('span');
+          kbd.className = 'option-kbd';
+          kbd.innerText = visualIdx + 1;
+          div.appendChild(kbd);
+        }
+
         div.appendChild(input);
         div.appendChild(label);
         optionsContainer.appendChild(div);
@@ -813,7 +974,18 @@
         div.className = 'pair-item';
         div.dataset.side = 'left';
         div.dataset.idx = item.idx;
-        div.innerText = item.text;
+
+        // Add keyboard hint
+        if (visualIdx < 4) {
+          const kbd = document.createElement('span');
+          kbd.className = 'option-kbd';
+          kbd.innerText = visualIdx + 1;
+          div.appendChild(kbd);
+        }
+
+        const textSpan = document.createElement('span');
+        textSpan.innerText = item.text;
+        div.appendChild(textSpan);
 
         if (isOverrideMode) {
           // In override mode, show already matched
@@ -830,7 +1002,18 @@
         div.className = 'pair-item';
         div.dataset.side = 'right';
         div.dataset.idx = item.idx;
-        div.innerText = item.text;
+
+        // Add keyboard hint
+        if (visualIdx < 4) {
+          const kbd = document.createElement('span');
+          kbd.className = 'option-kbd';
+          kbd.innerText = visualIdx + 1;
+          div.appendChild(kbd);
+        }
+
+        const textSpan = document.createElement('span');
+        textSpan.innerText = item.text;
+        div.appendChild(textSpan);
 
         if (isOverrideMode) {
           // In override mode, show already matched
