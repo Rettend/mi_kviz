@@ -478,6 +478,41 @@
       border-color: #842029 !important;
       color: #fca5a5 !important;
     }
+
+    /* Mobile responsive styles */
+    @media (max-width: 600px) {
+      .pair-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .pair-column {
+        max-width: 100%;
+      }
+
+      .pair-column-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .option-item,
+      .pair-item {
+        margin-left: 30px;
+      }
+
+      .option-kbd {
+        left: -28px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 0.7rem;
+      }
+
+      .kbd-hint {
+        display: none;
+      }
+    }
   </style>
 </head>
 
