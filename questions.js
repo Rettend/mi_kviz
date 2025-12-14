@@ -1836,18 +1836,12 @@ const questions = [
     "id": 120,
     "category": "10. Bizonytalanság kezelése",
     "question": "Mely fogalmak kapcsolhatók egymáshoz a bizonytalanság kezelésénél",
-    "type": "multi",
-    "options": [
-      "fa-gráf: csúcsok összevonása",
-      "heurisztikus módszer: MYCIN",
-      "bizonytalanság következmény: feltételes valószínűség",
-      "valószínűségi háló: véges körmentes gráf"
-    ],
-    "correct": [
-      0,
-      1,
-      2,
-      3
+    "type": "pair",
+    "pairs": [
+      { "left": "fa-gráf", "right": "csúcsok összevonása" },
+      { "left": "heurisztikus módszer", "right": "MYCIN" },
+      { "left": "bizonytalanság következmény", "right": "feltételes valószínűség" },
+      { "left": "valószínűségi háló", "right": "véges körmentes gráf" }
     ]
   },
   {
@@ -2470,4 +2464,5 @@ const questions = [
 ];
 
 window.questions = questions;
+
 
